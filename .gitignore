@@ -1,0 +1,54 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Database & Data
+*.db
+*.sqlite
+*.sqlite3
+face_encodings.pkl
+
+# Uploads (keep structure, ignore files)
+static/uploads/*.jpg
+static/uploads/*.png
+static/uploads/*.jpeg
+static/uploads/authorized_faces/*
+!static/uploads/.gitkeep
+!static/uploads/authorized_faces/.gitkeep
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db

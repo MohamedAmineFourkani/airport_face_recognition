@@ -1,0 +1,195 @@
+{% extends "base.html" %}
+
+{% block title %}Checkpoint Monitor - Airport Face Recognition{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row mb-3">
+        <div class="col-12 d-flex justify-content-between align-items-center">
+            <div>
+                <h2 class="fw-bold"><i class="fas fa-video text-success me-2"></i>Live Checkpoint Monitor</h2>
+                <p class="text-muted mb-0">Real-time face recognition at security checkpoints</p>
+            </div>
+            <div class="d-flex gap-2">
+                <select class="form-select bg-dark text-light border-secondary" id="checkpointSelect">
+                    {% for cp in checkpoints %}
+                    <option value="{{ cp.id }}">{{ cp.name }} ({{ cp.id }})</option>
+                    {% endfor %}
+                </select>
+                <button class="btn btn-success" id="startCameraBtn" onclick="startCamera()">
+                    <i class="fas fa-play me-1"></i> Start
+                </button>
+                <button class="btn btn-danger" id="stopCameraBtn" onclick="stopCamera()" style="display: none;">
+                    <i class="fas fa-stop me-1"></i> Stop
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Video Feed -->
+        <div class="col-lg-8">
+            <div class="card bg-dark border-secondary">
+                <div class="card-header bg-black border-secondary d-flex justify-content-between">
+                    <span><i class="fas fa-broadcast-tower text-danger me-2"></i>LIVE FEED</span>
+                    <span class="badge bg-danger" id="liveIndicator" style="display: none;">
+                        <i class="fas fa-circle fa-xs me-1"></i>REC
+                    </span>
+                </div>
+                <div class="card-body p-0 text-center bg-black">
+                    <img id="videoFeed" src="" alt="Video Feed" class="img-fluid" style="max-height: 480px; display: none;">
+                    <div id="cameraPlaceholder" class="py-5">
+                        <i class="fas fa-video-slash fa-4x text-secondary mb-3"></i>
+                        <p class="text-muted">Camera is offline. Click "Start" to begin monitoring.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recognition Results -->
+        <div class="col-lg-4">
+            <div class="card bg-dark border-secondary h-100">
+                <div class="card-header bg-black border-secondary">
+                    <h6 class="mb-0"><i class="fas fa-id-card me-2"></i>Recognition Results</h6>
+                </div>
+                <div class="card-body" id="recognitionResults">
+                    <div class="text-center text-muted py-5">
+                        <i class="fas fa-fingerprint fa-3x mb-3"></i>
+                        <p>No faces detected yet</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alternative: Upload Image -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card bg-dark border-secondary">
+                <div class="card-header bg-black border-secondary">
+                    <h6 class="mb-0"><i class="fas fa-upload me-2"></i>Manual Image Recognition</h6>
+                </div>
+                <div class="card-body">
+                    <form id="uploadForm" enctype="multipart/form-data">
+                        <div class="row g-3 align-items-end">
+                            <div class="col-md-4">
+                                <label class="form-label">Upload Image</label>
+                                <input type="file" class="form-control bg-dark text-light border-secondary" 
+                                       name="image" accept="image/*" required id="uploadImage">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Checkpoint</label>
+                                <select class="form-select bg-dark text-light border-secondary" name="checkpoint">
+                                    {% for cp in checkpoints %}
+                                    <option value="{{ cp.id }}">{{ cp.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fas fa-search me-2"></i>Recognize
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="uploadResult" class="mt-3" style="display: none;">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <img id="resultImage" class="img-fluid rounded border border-secondary" alt="Result">
+                            </div>
+                            <div class="col-md-6">
+                                <div id="resultDetails"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let cameraActive = false;
+
+function startCamera() {
+    fetch('/api/camera/start')
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                cameraActive = true;
+                document.getElementById('videoFeed').src = '/video_feed?' + Date.now();
+                document.getElementById('videoFeed').style.display = 'block';
+                document.getElementById('cameraPlaceholder').style.display = 'none';
+                document.getElementById('liveIndicator').style.display = 'inline';
+                document.getElementById('startCameraBtn').style.display = 'none';
+                document.getElementById('stopCameraBtn').style.display = 'inline';
+            } else {
+                alert('Failed to start camera: ' + data.message);
+            }
+        });
+}
+
+function stopCamera() {
+    fetch('/api/camera/stop')
+        .then(r => r.json())
+        .then(data => {
+            cameraActive = false;
+            document.getElementById('videoFeed').src = '';
+            document.getElementById('videoFeed').style.display = 'none';
+            document.getElementById('cameraPlaceholder').style.display = 'block';
+            document.getElementById('liveIndicator').style.display = 'none';
+            document.getElementById('startCameraBtn').style.display = 'inline';
+            document.getElementById('stopCameraBtn').style.display = 'none';
+        });
+}
+
+// Handle image upload recognition
+document.getElementById('uploadForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+
+    fetch('/api/recognize', {
+        method: 'POST',
+        body: formData
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById('uploadResult').style.display = 'block';
+            // Show result details
+            let html = '<h6 class="text-success mb-3"><i class="fas fa-check-circle me-2"></i>Recognition Complete</h6>';
+            html += '<p class="text-muted small">Faces detected: ' + data.faces_detected + '</p>';
+            html += '<div class="list-group list-group-flush bg-dark">';
+
+            data.results.forEach((result, idx) => {
+                const badgeClass = result.authorized ? 'bg-success' : 'bg-danger';
+                const icon = result.authorized ? 'fa-check' : 'fa-times';
+                html += '<div class="list-group-item bg-dark border-secondary">';
+                html += '<div class="d-flex justify-content-between align-items-center">';
+                html += '<div><strong>' + result.name + '</strong><br><small class="text-muted">' + (result.passport_id || 'N/A') + '</small></div>';
+                html += '<span class="badge ' + badgeClass + '"><i class="fas ' + icon + ' me-1"></i>' + (result.authorized ? 'AUTH' : 'UNAUTH') + '</span>';
+                html += '</div>';
+                html += '<div class="mt-1"><small>Confidence: ' + result.confidence.toFixed(1) + '%</small></div>';
+                html += '</div>';
+            });
+
+            html += '</div>';
+            document.getElementById('resultDetails').innerHTML = html;
+
+            // Show annotated image
+            const file = document.getElementById('uploadImage').files[0];
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('resultImage').src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    })
+    .catch(err => {
+        alert('Error: ' + err.message);
+    });
+});
+</script>
+{% endblock %}

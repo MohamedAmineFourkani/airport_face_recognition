@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}Travelers - Airport Face Recognition{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col-12 d-flex justify-content-between align-items-center">
+            <div>
+                <h2 class="fw-bold"><i class="fas fa-users text-success me-2"></i>Registered Travelers</h2>
+                <p class="text-muted mb-0">All authorized travelers in the system</p>
+            </div>
+            <a href="{{ url_for('register') }}" class="btn btn-success">
+                <i class="fas fa-user-plus me-2"></i>Add Traveler
+            </a>
+        </div>
+    </div>
+
+    <div class="card bg-dark border-secondary">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-dark table-hover mb-0 align-middle">
+                    <thead class="bg-black">
+                        <tr>
+                            <th>Photo</th>
+                            <th>Traveler ID</th>
+                            <th>Name</th>
+                            <th>Passport ID</th>
+                            <th>Nationality</th>
+                            <th>Flight</th>
+                            <th>Gate</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for traveler in travelers %}
+                        <tr>
+                            <td>
+                                {% if traveler.image_path %}
+                                <img src="{{ url_for('static', filename='uploads/authorized_faces/' + traveler.image_path) }}" 
+                                     class="rounded" style="width: 50px; height: 50px; object-fit: cover;" alt="Face">
+                                {% else %}
+                                <div class="rounded bg-secondary d-flex align-items-center justify-content-center" 
+                                     style="width: 50px; height: 50px;">
+                                    <i class="fas fa-user text-muted"></i>
+                                </div>
+                                {% endif %}
+                            </td>
+                            <td><code class="text-info">{{ traveler.id }}</code></td>
+                            <td class="fw-bold">{{ traveler.name }}</td>
+                            <td>{{ traveler.passport_id }}</td>
+                            <td>{{ traveler.nationality or '-' }}</td>
+                            <td><span class="badge bg-primary">{{ traveler.flight_number or 'N/A' }}</span></td>
+                            <td>{{ traveler.gate or '-' }}</td>
+                            <td><span class="badge bg-success">{{ traveler.status.upper() }}</span></td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="8" class="text-center text-muted py-5">
+                                <i class="fas fa-users fa-3x mb-3"></i>
+                                <p>No travelers registered yet</p>
+                                <a href="{{ url_for('register') }}" class="btn btn-success btn-sm">Register First Traveler</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

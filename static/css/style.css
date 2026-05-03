@@ -1,0 +1,265 @@
+/* Airport Face Recognition System - Custom Styles */
+
+:root {
+    --primary-green: #198754;
+    --dark-bg: #0f1115;
+    --card-bg: #1a1d23;
+    --border-color: #2d323e;
+}
+
+body {
+    background-color: var(--dark-bg);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Navbar */
+.navbar-brand {
+    font-size: 1.4rem;
+    letter-spacing: 1px;
+}
+
+/* Cards */
+.card {
+    background-color: var(--card-bg) !important;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    color: #e0e0e0 !important;
+}
+
+.card * {
+    color: inherit;
+}
+
+.card .text-muted,
+.card .text-muted * {
+    color: #6c757d !important;
+}
+
+.card .text-success,
+.card .text-success * {
+    color: #198754 !important;
+}
+
+.card .text-danger,
+.card .text-danger * {
+    color: #dc3545 !important;
+}
+
+.card .text-info,
+.card .text-info * {
+    color: #0dcaf0 !important;
+}
+
+.card .text-warning,
+.card .text-warning * {
+    color: #ffc107 !important;
+}
+
+.card .text-primary,
+.card .text-primary * {
+    color: #0d6efd !important;
+}
+
+.card:hover {
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.4);
+}
+
+.card-header {
+    border-radius: 12px 12px 0 0 !important;
+    font-weight: 600;
+}
+
+/* Icon Boxes */
+.icon-box {
+    border-radius: 12px;
+    transition: transform 0.3s ease;
+}
+
+.icon-box:hover {
+    transform: scale(1.05);
+}
+
+/* Tables */
+.table-dark {
+    --bs-table-bg: transparent;
+    --bs-table-color: #e0e0e0;
+    --bs-table-border-color: var(--border-color);
+}
+
+.table-dark thead th {
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #888;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.table-dark tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+/* Table body cells */
+.table-dark tbody td,
+.table-dark tbody th {
+    color: #e0e0e0 !important;
+}
+
+/* Code elements in dark context */
+.bg-dark code,
+.card code {
+    color: #0dcaf0 !important;
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Ensure labels and small text are visible */
+.form-label,
+.form-text {
+    color: #adb5bd !important;
+}
+
+/* List group items in dark context */
+.list-group-item.bg-dark {
+    color: #e0e0e0 !important;
+}
+
+/* Form Controls */
+.form-control, .form-select {
+    background-color: #0f1115 !important;
+    border-color: var(--border-color) !important;
+    color: #e0e0e0 !important;
+}
+
+.form-control:focus, .form-select:focus {
+    background-color: #0f1115 !important;
+    border-color: var(--primary-green) !important;
+    box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.25) !important;
+    color: #e0e0e0 !important;
+}
+
+.form-control::placeholder {
+    color: #555 !important;
+}
+
+/* Buttons */
+.btn-success {
+    background-color: var(--primary-green);
+    border-color: var(--primary-green);
+}
+
+.btn-success:hover {
+    background-color: #146c43;
+    border-color: #146c43;
+}
+
+/* Badges */
+.badge {
+    font-weight: 500;
+    letter-spacing: 0.3px;
+}
+
+/* Progress Bars */
+.progress {
+    background-color: #2d323e;
+    border-radius: 4px;
+}
+
+.progress-bar {
+    border-radius: 4px;
+    transition: width 0.6s ease;
+}
+
+/* Code */
+code {
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+/* Animations */
+@keyframes pulse-green {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(25, 135, 84, 0.4); }
+    50% { box-shadow: 0 0 0 10px rgba(25, 135, 84, 0); }
+}
+
+@keyframes pulse-red {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.4); }
+    50% { box-shadow: 0 0 0 10px rgba(220, 53, 69, 0); }
+}
+
+.live-indicator {
+    animation: pulse-red 2s infinite;
+}
+
+/* Video Feed */
+#videoFeed {
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+/* Alerts */
+.alert {
+    border: none;
+    border-radius: 8px;
+}
+
+/* Footer */
+footer {
+    margin-top: auto;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--dark-bg);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #444;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .card {
+        margin-bottom: 1rem;
+    }
+
+    .icon-box {
+        padding: 0.5rem !important;
+    }
+
+    .icon-box i {
+        font-size: 1.5rem !important;
+    }
+}
+
+/* Recognition Result Cards */
+.result-card {
+    border-left: 4px solid;
+    padding: 1rem;
+    margin-bottom: 0.5rem;
+    border-radius: 0 8px 8px 0;
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.result-card.authorized {
+    border-left-color: var(--primary-green);
+}
+
+.result-card.unauthorized {
+    border-left-color: #dc3545;
+}

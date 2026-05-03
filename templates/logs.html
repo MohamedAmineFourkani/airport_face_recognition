@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}Recognition Logs - Airport Face Recognition{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="fw-bold"><i class="fas fa-history text-success me-2"></i>Recognition Logs</h2>
+            <p class="text-muted">Complete history of face recognition events</p>
+        </div>
+    </div>
+
+    <div class="card bg-dark border-secondary">
+        <div class="card-header bg-black border-secondary d-flex justify-content-between align-items-center">
+            <span>Total Records: <strong>{{ total }}</strong></span>
+            <div class="btn-group btn-group-sm">
+                {% if page > 1 %}
+                <a href="{{ url_for('logs', page=page-1) }}" class="btn btn-outline-light">&laquo; Prev</a>
+                {% endif %}
+                <span class="btn btn-secondary disabled">Page {{ page }}</span>
+                {% if total > page * per_page %}
+                <a href="{{ url_for('logs', page=page+1) }}" class="btn btn-outline-light">Next &raquo;</a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-dark table-hover mb-0">
+                    <thead class="bg-black">
+                        <tr>
+                            <th>#</th>
+                            <th>Timestamp</th>
+                            <th>Name</th>
+                            <th>Passport ID</th>
+                            <th>Checkpoint</th>
+                            <th>Confidence</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for log in logs %}
+                        <tr>
+                            <td>{{ log.id }}</td>
+                            <td class="text-muted small">{{ log.timestamp }}</td>
+                            <td class="fw-bold">{{ log.name or 'Unknown' }}</td>
+                            <td><code>{{ log.passport_id or 'N/A' }}</code></td>
+                            <td><span class="badge bg-secondary">{{ log.checkpoint }}</span></td>
+                            <td>
+                                {% if log.confidence %}
+                                <div class="d-flex align-items-center">
+                                    <div class="progress flex-grow-1 me-2 bg-secondary" style="height: 6px; width: 80px;">
+                                        <div class="progress-bar {{ 'bg-success' if log.authorized else 'bg-danger' }}" 
+                                             style="width: {{ log.confidence }}%"></div>
+                                    </div>
+                                    <small>{{ "%.1f"|format(log.confidence) }}%</small>
+                                </div>
+                                {% else %}
+                                <span class="text-muted">-</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if log.authorized %}
+                                <span class="badge bg-success"><i class="fas fa-check me-1"></i>AUTHORIZED</span>
+                                {% else %}
+                                <span class="badge bg-danger"><i class="fas fa-times me-1"></i>UNAUTHORIZED</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="7" class="text-center text-muted py-5">
+                                <i class="fas fa-clipboard-list fa-3x mb-3"></i>
+                                <p>No recognition logs found</p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
