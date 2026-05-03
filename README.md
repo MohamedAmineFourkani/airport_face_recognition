@@ -152,7 +152,7 @@ airport_face_recognition/
 ### Dashboard
 Real-time statistics, active checkpoints, and recent recognition logs.
 
-![Dashboard Preview](https://raw.githubusercontent.com/MohamedAmineFourkani/airport_face_recognition/main/screenshots/preview_page.png)
+![Dashboard Preview](screenshots/preview_page.png)
 
 ### Checkpoint Monitor
 Live video feed with face detection bounding boxes and authorization status.
